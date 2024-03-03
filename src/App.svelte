@@ -1,5 +1,11 @@
 <script lang="ts">
+	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query'
 	import Timeline from './lib/Timeline.svelte';
+  
+	const queryClient = new QueryClient()
 </script>
 
-<Timeline />
+<QueryClientProvider client={queryClient}>
+	<Timeline />
+</QueryClientProvider>
+
