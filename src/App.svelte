@@ -6,5 +6,7 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	<Timeline />
+	<div class="flex w-full justify-center">
+		<Timeline />
+	</div>
 </QueryClientProvider>

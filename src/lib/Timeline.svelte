@@ -3,14 +3,7 @@
 	import { client } from '../client';
 	import dayjs from 'dayjs';
 	import type { Task } from '../types';
-
-	const today = new Date();
-
-	const sevenDaysAgo = new Date(today);
-	sevenDaysAgo.setDate(today.getDate() - 7);
-
-	const sevenDaysAfter = new Date(today);
-	sevenDaysAfter.setDate(today.getDate() + 7);
+	import TimelineTask from './TimelineTask.svelte';
 
 	const startDate = dayjs().subtract(2, 'week');
 	const endDate = dayjs().add(2, 'week');
@@ -20,33 +13,71 @@
 		(_, i) => startDate.add(i, 'day')
 	);
 
+	const gridColumns = 29;
+	const gridRows = 20;
+	const gridOccupancy = Array.from({ length: gridRows }, () =>
+		Array(gridColumns).fill(false)
+	);
+
+	function getRow(column: number, span: number) {
+		let row = 0;
+		for (let r = 2; r < gridRows; r++) {
+			let isOccupied = false;
+			for (let c = column; c < column + span; c++) {
+				if (c < gridColumns) {
+					isOccupied = isOccupied || gridOccupancy[r][c];
+				}
+			}
+			if (!isOccupied) {
+				//set occupancy
+				for (let c = column; c < column + span; c++) {
+					if (c < gridColumns) {
+						gridOccupancy[r][c] = true;
+					}
+				}
+				row = r;
+				break;
+			}
+		}
+		return row;
+	}
+
 	const query = createQuery<Task[]>({
-		queryKey: ['todos'],
+		queryKey: ['tasks'],
 		queryFn: async () => {
 			const response = await client.get('/733440/tasks', {
 				params: {
-					start: sevenDaysAgo.toISOString(),
-					end: sevenDaysAfter.toISOString(),
+					start: startDate.toISOString(),
+					end: endDate.toISOString(),
 				},
 			});
 
-			return response.data.map((task: Task) => {
-				const start = dayjs(task.start_date).diff(startDate, 'day') + 2;
-				const span =
-					start + dayjs(task.end_date).diff(dayjs(task.start_date), 'day') + 1;
+			return response.data
+				.sort((a: Task, b: Task) => a.weight - b.weight)
+				.map((task: Task) => {
+					const start = dayjs(task.start_date).diff(startDate, 'day') + 2;
+					const span =
+						start +
+						dayjs(task.end_date).diff(dayjs(task.start_date), 'day') +
+						1;
+					const row = getRow(start, span - start);
 
-				return {
-					...task,
-					start,
-					span,
-				};
-			});
+					console.log({ start, span, row, name: task.name });
+					return {
+						...task,
+						start,
+						span,
+						row,
+					};
+				});
 		},
 	});
+
+	console.log({ gridOccupancy });
 </script>
 
 <main>
-	<div class="grid-cols-29 grid grid-rows-12 gap-1 p-4">
+	<div class="grid-cols-29 mx-auto grid gap-y-1">
 		{#each dateRange as date}
 			<div>
 				<p>{date.format('dd')[0]}{date.format('D')}</p>
@@ -58,11 +89,7 @@
 			<p>Error: {$query.error.message}</p>
 		{:else if $query.isSuccess}
 			{#each $query.data.sort((a, b) => a.weight - b.weight) as row, i}
-				<div
-					style={`grid-column: ${row.start}/${row.span}; grid-row-start: ${i + 2};`}
-					class="flex h-16 w-full items-center rounded-md bg-[#d89895]">
-					<p class="p-1">{row.name}</p>
-				</div>
+				<TimelineTask {row} />
 			{/each}
 		{/if}
 	</div>

@@ -4,12 +4,9 @@ export const client = axios.create({
 	baseURL: `https://api.plan.toggl.space/api/v6-rc1`,
 });
 
-const token = import.meta.env.VITE_TOKEN;
-
-console.log({ token });
-
 client.interceptors.request.use(
 	(config) => {
+		const token = localStorage.getItem('token');
 		if (token) {
 			config.headers['Authorization'] = `Bearer ${token}`;
 		}
@@ -26,6 +23,7 @@ client.interceptors.response.use(
 		return response;
 	},
 	async (error) => {
+		const token = localStorage.getItem('token');
 		const originalRequest = error.config;
 
 		// Check if the error is due to an expired token
@@ -70,7 +68,7 @@ async function refreshToken() {
 			{
 				refresh_token: localStorage.getItem('refresh_token'),
 				grant_type: 'refresh_token',
-				client_id: '2f37f320-6871-439a-bd53-11ec920811a7'.toUpperCase(),
+				client_id: localStorage.getItem('client_id'),
 			}
 		);
 
@@ -86,5 +84,5 @@ async function refreshToken() {
 }
 
 function redirectToLogin() {
-	window.location.href = `https://api.plan.toggl.space/oauth/login/?client_id=2f37f320-6871-439a-bd53-11ec920811a7&response_type=code&redirect_uri=${encodeURIComponent('http://localhost:5173')}`;
+	window.location.href = `https://api.plan.toggl.space/oauth/login/?client_id=${localStorage.getItem('client_id')}&response_type=code&redirect_uri=${encodeURIComponent('http://localhost:5173')}`;
 }

@@ -39,4 +39,5 @@ export type Task = {
 	created_by: number;
 	start: string;
 	span: string;
+	row: string;
 };
