@@ -1,73 +1,42 @@
-export type AuthenticateTokenRequest = {
-	code: string;
-	grant_type: 'authorization_code';
-	client_id: string;
-};
-
-export type AuthenticateTokenResponse = {
-	access_token: string;
-	expires_in: number;
-	refresh_token: string;
-	token_type: string;
-};
-
-export type MeResponse = User;
-
-export type User = {
+export type Task = {
+	attachments: any[];
+	tracking: null;
+	end_time: null;
+	estimate_type: 'daily';
+	id: number;
+	start_time: null;
+	done_checklist_items_count: number;
+	plan_status_position: null;
+	parent_id: null;
+	created_at: string; // '2024-02-02T03:10:12.415372'
+	updated_by: number;
+	name: string;
+	tracked: boolean;
+	has_notes: boolean;
+	visible_properties: string[];
+	start_date: string; // '2024-02-01'
+	tag_ids: [];
+	daily_estimated_minutes: null;
+	status: 'in_progress';
+	updated_at: string; // '2024-02-02T03:10:12.415372'
+	timeline_segment_id: null;
+	repetition_rule: null;
+	done: boolean;
+	end_date: string; // '2024-02-07'
+	total_checklist_items_count: number;
+	color: number;
+	estimated_minutes: null;
+	weight: number;
+	folder_id: null;
+	estimate_skips_weekend: boolean;
+	workspace_members: number[];
+	is_last_repetition: boolean;
+	task_type: string;
 	color_id: number;
-	created_at: string;
-	email: string;
-	email_verified_at: null;
-	has_picture: boolean;
-	id: number;
-	initials: string;
-	invitations: [];
-	legal_consent_pending: boolean;
-	manager: null;
-	name: string;
-	picture_url: string;
-	preferences: {
-		hide_weekends: boolean;
-		highlight_done_tasks: boolean;
-		onboarding_emails: boolean;
-		pin_me_on_top: boolean;
-		selected_account_id: null;
-		selected_group_id: null;
-		selected_project_id: null;
-		start_of_week: number;
-		task_notifications: boolean;
-		timezone: string;
-		vision_impaired: boolean;
-		vision_impaired_big_font: boolean;
-		vision_impaired_borders: boolean;
-		vision_impaired_contrast_text: boolean;
-		vision_impaired_light_colors: boolean;
-		vision_impaired_patterns: boolean;
-		vision_impaired_today: boolean;
-		vision_impaired_weekends: boolean;
-	};
-	toggl_id: string;
-	updated_at: string;
-	workspaces: Workspace[];
-};
-
-export type Workspace = {
-	active: boolean;
-	created_at: string;
-	custom_colors: [];
-	id: number;
-	membership_id: number;
-	minutes_per_work_day: null;
-	name: string;
-	pricing_system: string;
-	role: string;
-	suspended_at: null;
-	updated_at: string;
-	working_minutes_per_friday: number;
-	working_minutes_per_monday: number;
-	working_minutes_per_saturday: number;
-	working_minutes_per_sunday: number;
-	working_minutes_per_thursday: number;
-	working_minutes_per_tuesday: number;
-	working_minutes_per_wednesday: number;
+	comments: number[];
+	original_repeated_task_id: null;
+	plan_id: null;
+	created_by: number;
+	start: string;
+	span: string;
 };

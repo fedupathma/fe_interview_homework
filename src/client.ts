@@ -4,9 +4,12 @@ export const client = axios.create({
 	baseURL: `https://api.plan.toggl.space/api/v6-rc1`,
 });
 
+const token = import.meta.env.VITE_TOKEN;
+
+console.log({ token });
+
 client.interceptors.request.use(
 	(config) => {
-		const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
 		if (token) {
 			config.headers['Authorization'] = `Bearer ${token}`;
 		}
@@ -24,7 +27,6 @@ client.interceptors.response.use(
 	},
 	async (error) => {
 		const originalRequest = error.config;
-		const token = localStorage.getItem('access_token');
 
 		// Check if the error is due to an expired token
 		if (error.response.status === 401 && !originalRequest._retry) {

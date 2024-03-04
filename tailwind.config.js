@@ -30,6 +30,9 @@ export default {
 			fontFamily: {
 				sans: fontFamily,
 			},
+			gridTemplateColumns: {
+				'29': 'repeat(29, minmax(0, 1fr))',
+			},
 		},
 	},
 };

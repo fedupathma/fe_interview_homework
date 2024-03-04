@@ -27,7 +27,9 @@
 		"vite": "5.0.12"
 	},
 	"dependencies": {
+		"@neodrag/svelte": "^2.0.3",
 		"@tanstack/svelte-query": "^5.24.6",
-		"axios": "^1.6.7"
+		"axios": "^1.6.7",
+		"dayjs": "^1.11.10"
 	}
 }
